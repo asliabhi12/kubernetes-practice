@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: box0
+spec:
+  containers:
+    - name: busybox-container
+      image: busybox
+      command: ["sleep", "999999"]
+  initContainers:
+    - name: init-debug
+      image: busybox
+      command: ["/bin/sh", "-c", "sleep 30; touch /tmp/debug; sleep 30; rm /tmp/debug"]
+  readinessProbe:
+    exec:
+      command:
+        - test
+        - -e
+        - /tmp/debug
+    initialDelaySeconds: 5
+    periodSeconds: 5
